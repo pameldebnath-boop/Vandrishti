@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VanDrishti · Forest Tree Registry & Carbon Portal</title>
+<style>
+:root{--bg:#fff;--fg:#1d2a24;--mut:#55685f;--g:#0b5b3a;--line:#cfdcd6;--card:#fff;--top:#f3f7f5;--amber:#e0a526;--fs:16px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a15;--fg:#e4eee8;--mut:#9db3a8;--g:#5fd49b;--line:#2c4237;--card:#16231c;--top:#0c1511}}
+:root[data-theme="dark"]{--bg:#101a15;--fg:#e4eee8;--mut:#9db3a8;--g:#5fd49b;--line:#2c4237;--card:#16231c;--top:#0c1511}
+html{scroll-behavior:smooth;font-size:var(--fs)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Noto Sans",system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.6}
+a{color:var(--g)}
+.top{background:var(--top);border-bottom:1px solid var(--line);font-size:.8rem;color:var(--mut);padding:.5rem 1.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.top .sp{flex:1}.top button{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:4px;padding:0 .5rem;cursor:pointer}
+header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;flex-wrap:wrap;gap:.5rem;border-bottom:1px solid var(--line)}
+header b{font-size:1.5rem;color:var(--g);display:block;line-height:1.1}header small{color:var(--mut)}
+nav a{margin-left:1rem;text-decoration:none;color:var(--fg);font-size:.9rem}nav a:hover{color:var(--g)}
+.wrap{max-width:60rem;margin:0 auto;padding:0 1.5rem}
+.hero{padding:3rem 0 2rem}.hero h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.1;color:var(--g);margin:0 0 1rem}
+.hero p{font-size:1.1rem;max-width:34rem}
+.btn{display:inline-block;background:var(--g);color:var(--bg);padding:.6rem 1.1rem;border-radius:6px;text-decoration:none;margin:.3rem .5rem .3rem 0;font-weight:600;border:0;cursor:pointer;font:inherit}
+.btn.o{background:none;color:var(--g);border:1.5px solid var(--g)}
+.stats{display:flex;gap:2.5rem;margin-top:1.5rem;flex-wrap:wrap}.stats b{display:block;font-size:2rem;color:var(--g)}.stats span{color:var(--mut);font-size:.85rem}
+h2{color:var(--g);font-size:1.8rem;margin:2.5rem 0 1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem}
+.card{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:1.2rem}
+.card h3{margin:0 0 .6rem;font-size:1.05rem}
+.q{border-bottom:3px solid var(--g);text-decoration:none;color:var(--fg);display:block}.q b{display:block}.q span{color:var(--mut);font-size:.9rem}
+.note{border-left:4px solid var(--amber);padding:.4rem 1rem;color:var(--mut);margin:1.2rem 0;font-size:.95rem}
+.row{display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap}
+label{display:block;font-size:.8rem;color:var(--mut)}
+input,select{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.6rem .7rem;width:100%;box-sizing:border-box}
+.row>div{flex:1;min-width:9rem}.row .go{flex:0;background:none;border:0;color:var(--mut);font-weight:700;cursor:pointer;font:inherit;font-weight:700}
+.go:hover{color:var(--g)}
+pre#log{font:.8rem ui-monospace,Menlo,monospace;color:var(--mut);white-space:pre-wrap;margin:.5rem 0;max-height:9rem;overflow:auto}
+.map{position:relative;border:2px solid var(--g);border-radius:10px;overflow:hidden;margin-top:1rem}
+canvas{display:block;width:100%;height:auto}
+.cap{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);color:#fff;font-size:.72rem;padding:.25rem .6rem}
+#tip{position:absolute;display:none;background:#0d1a13;color:#fff;font-size:.78rem;padding:.4rem .6rem;border-radius:6px;pointer-events:none;line-height:1.4;z-index:2}
+.leg{display:flex;gap:1.2rem;margin:.6rem 0;font-size:.9rem}.leg i{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;margin-right:.35rem}
+#rec{min-height:5rem;display:flex;align-items:center;padding:1.5rem}
+#rec dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.6rem 1.5rem;margin:0;width:100%}#rec dt{font-size:.75rem;color:var(--mut)}#rec dd{margin:0;font-weight:600}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:34rem}
+th{color:var(--g);text-align:left;padding:.7rem .6rem;border-bottom:2px solid var(--line)}
+td{padding:.7rem .6rem;border-bottom:1px solid var(--line)}tbody tr{cursor:pointer}tbody tr:hover{background:var(--top)}
+.Healthy{color:#1a8a50}.Stressed{color:#b9830f}.Diseased{color:#c0392b}.Dead{color:var(--mut)}
+footer{background:var(--top);border-top:1px solid var(--line);margin-top:3rem;padding:2rem 0;font-size:.9rem}
+footer .grid{grid-template-columns:repeat(auto-fit,minmax(10rem,1fr))}footer a{display:block;text-decoration:none}
+.small{font-size:.9rem;color:var(--mut)}
+</style></head><body>
+<div class="top"><span>Government of Assam · Forest monitoring (demo)</span><a href="https://dataspace.copernicus.eu" target="_blank" rel="noopener">NESFIC-D-15 ↗</a><a href="https://dataspace.copernicus.eu" target="_blank" rel="noopener">Sentinel data ↗</a><span class="sp"></span>
+<button onclick="fz(-1)">A-</button><button onclick="fz(0)">A</button><button onclick="fz(1)">A+</button></div>
+<header><div><b>VanDrishti</b><small>Forest Tree Registry &amp; Carbon Portal · NESFIC-D-15</small></div>
+<nav><a href="#home">Home</a><a href="#about">About</a><a href="#sat">Satellite view</a><a href="#lookup">Tree lookup</a><a href="#registry">Registry</a><a href="#entry">Data entry</a><a href="#res">Resources</a></nav></header>
+
+<main class="wrap" id="home">
+<section class="hero"><h1>Every tree. Every forest. One trusted record.</h1>
+<p>Look at any forest from above, point at a tree, and read its measurements, biomass and carbon, all tied to its tag.</p>
+<a class="btn" href="#sat">Open satellite view</a><a class="btn o" href="#lookup">Look up a tree</a>
+<div class="stats"><div><b id="sT">0</b><span>tagged trees</span></div><div><b id="sF">3</b><span>forest areas</span></div><div><b id="sC">0</b><span>t carbon (est.)</span></div></div></section>
+
+<h2 style="font-size:1.1rem;margin:1rem 0">Quick access</h2>
+<div class="grid">
+<a class="card q" href="#sat"><b>Satellite view</b><span>Type a forest name</span></a>
+<a class="card q" href="#lookup"><b>Tree by tag</b><span>Biomass and carbon</span></a>
+<a class="card q" href="#registry"><b>Forest registry</b><span>Filter and review</span></a>
+<a class="card q" href="#about"><b>How carbon is worked out</b><span>Method and limits</span></a></div>
+
+<section id="about"><h2>About the solution</h2>
+<p>Each tree carries a tag. Its record holds species, position, a history of girth and height readings, and health. From the latest reading the portal estimates <b>biomass</b> and <b>carbon</b>. The same records draw the <a href="#sat">satellite view</a>, fill the <a href="#registry">registry</a> and can be edited from <a href="#entry">data entry</a>.</p>
+<div class="grid">
+<div class="card"><h3>Biomass and carbon per tree</h3>Girth and height give above-ground biomass using a general tropical equation. Carbon is 47% of it, and CO₂ equivalent is carbon × 44/12. <a href="#lookup" onclick="setTimeout(()=>show('AS-A-00003'),50)">Try a tag</a>.</div>
+<div class="card"><h3>Hover to inspect</h3>Move the pointer over a tree on the map to see its tag, species, size, health, biomass and carbon. Click it to open the full record.</div>
+<div class="card"><h3>Open data, agency control</h3>Satellite layers come from open archives. Records stay with the agency. See <a href="#res">resources</a>.</div></div>
+<div class="note">The equation is a placeholder. A pilot would replace it with a model calibrated on local field plots, and report uncertainty.</div></section>
+
+<section id="sat"><h2>Satellite view and console</h2>
+<label for="cmd">Console: type a forest name, or help</label>
+<div class="row"><div style="flex:4"><input id="cmd" placeholder="e.g. Demo Forest Block B" autocomplete="off"></div><button class="go" id="run">Run</button></div>
+<pre id="log">Console ready. Commands: &lt;forest name&gt;, tree &lt;tag&gt;, list, help</pre>
+<div class="map"><canvas id="cv" width="1100" height="560"></canvas><div id="tip"></div><div class="cap" id="cap"></div></div>
+<div class="leg"><span><i style="background:#6fd08c"></i>Healthy</span><span><i style="background:#e0a526"></i>Stressed</span><span><i style="background:#d9663a"></i>Diseased</span><span><i style="background:#555"></i>Dead</span></div>
+<div class="note">Demo view: the background is a generated satellite-style picture, and tree positions come from the records. A live build draws real imagery from <a href="https://dataspace.copernicus.eu" target="_blank" rel="noopener">Sentinel ↗</a> or <a href="https://bhoonidhi.nrsc.gov.in" target="_blank" rel="noopener">Bhoonidhi ↗</a>.</div></section>
+
+<section id="lookup"><h2>Tree lookup by tag</h2>
+<div class="row"><div style="flex:4"><input id="tag" placeholder="Enter tag, e.g. AS-A-00003"></div><button class="go" id="showb">Show record</button></div>
+<div class="card" id="rec" style="margin-top:1rem">Enter a tag, click a row in the registry, or click a tree on the map.</div></section>
+
+<section id="registry"><h2>Forest registry</h2>
+<div class="row"><div><label>Forest area</label><select id="fa"></select></div><div><label>Search tag or species</label><input id="q"></div>
+<div><label>Health</label><select id="fh"><option>All</option><option>Healthy</option><option>Stressed</option><option>Diseased</option><option>Dead</option></select></div></div>
+<div class="tw"><table style="margin-top:1rem"><thead><tr><th>Tag</th><th>Species</th><th>Girth cm</th><th>Height m</th><th>Carbon kg</th><th>Health</th></tr></thead><tbody id="tb"></tbody></table></div>
+<p><button class="btn o" onclick="reset()">Reset demo data</button></p></section>
+
+<section id="entry"><h2>Data entry</h2>
+<div class="row"><div><label>Forest area</label><select id="ef"></select></div>
+<div><label>Species</label><select id="es"><option>Sal</option><option>Teak</option><option>Hollong</option><option>Gamari</option><option>Other</option></select></div>
+<div><label>Tag (blank = new)</label><input id="et"></div></div>
+<div class="row" style="margin-top:.8rem"><div><label>Latitude</label><input id="ela" type="number" step="any"></div><div><label>Longitude</label><input id="elo" type="number" step="any"></div>
+<div><label>Girth (cm)</label><input id="eg" type="number" step="any"></div><div><label>Height (m)</label><input id="eh" type="number" step="any"></div>
+<div><label>Health</label><select id="ehl"><option>Healthy</option><option>Stressed</option><option>Diseased</option><option>Dead</option></select></div></div>
+<p><button class="btn" id="save">Save record</button></p><p class="small">Results appear in the console log. New trees show on the map straight away.</p></section>
+
+<section id="res"><h2>Resources <span class="small">(open in a new tab)</span></h2>
+<div class="grid">
+<div class="card"><a href="https://dataspace.copernicus.eu" target="_blank" rel="noopener">NESFIC-D-15 statement ↗</a><br><span class="small">The challenge this portal responds to.</span></div>
+<div class="card"><a href="https://dataspace.copernicus.eu" target="_blank" rel="noopener">Copernicus Data Space ↗</a><br><span class="small">Sentinel-1 and Sentinel-2 imagery.</span></div>
+<div class="card"><a href="https://bhoonidhi.nrsc.gov.in" target="_blank" rel="noopener">Bhoonidhi (NRSC) ↗</a><br><span class="small">Indian satellite data archive.</span></div>
+<div class="card"><a href="https://fsi.nic.in" target="_blank" rel="noopener">Forest Survey of India ↗</a><br><span class="small">National forest assessments.</span></div>
+<div class="card"><a href="https://www.ipcc-nggip.iges.or.jp" target="_blank" rel="noopener">IPCC inventory guidelines ↗</a><br><span class="small">Carbon fractions and methods.</span></div></div></section>
+</main>
+
+<footer><div class="wrap"><div class="grid">
+<div><b>Sections</b><a href="#about">About</a><a href="#sat">Satellite view</a><a href="#lookup">Tree lookup</a><a href="#registry">Registry</a><a href="#entry">Data entry</a></div>
+<div><b>External</b><a href="https://dataspace.copernicus.eu" target="_blank" rel="noopener">Copernicus ↗</a><a href="https://bhoonidhi.nrsc.gov.in" target="_blank" rel="noopener">Bhoonidhi ↗</a><a href="https://fsi.nic.in" target="_blank" rel="noopener">FSI ↗</a></div>
+<div><b>Notice</b><p class="small">Demonstration prototype, not an official government site. Sample records are fictional.</p></div></div>
+<p class="small"><a href="#home">Back to top ↑</a> · VanDrishti · Proposal prototype for NESFIC 2026</p></div></footer>
+
+<script>
+const AREAS={A:"Demo Forest Block A",B:"Demo Forest Block B",C:"Demo Forest Block C"};
+const RHO={Sal:.75,Teak:.6,Hollong:.5,Gamari:.55,Other:.6};
+const COL={Healthy:"#6fd08c",Stressed:"#e0a526",Diseased:"#d9663a",Dead:"#555"};
+const SEED_A=[["Sal",59.4,14.6,"Healthy"],["Gamari",82.7,14.9,"Stressed"],["Hollong",59.9,11.4,"Healthy"],["Other",33,18.4,"Diseased"],["Hollong",55.2,14.5,"Diseased"],["Teak",44,14.5,"Healthy"],["Teak",34.8,18.3,"Healthy"],["Hollong",54.1,16.6,"Healthy"],["Hollong",32.9,13.1,"Healthy"],["Other",59.7,13.4,"Healthy"],["Teak",74.6,10.3,"Diseased"],["Hollong",81.6,16.5,"Healthy"],["Hollong",42.9,12.9,"Diseased"],["Sal",51.6,14.9,"Healthy"]];
+function rng(s){return()=>(s=(s*1664525+1013904223)%4294967296)/4294967296}
+function build(){const T=[];for(const k of "ABC"){const r=rng(k.charCodeAt(0)*977);
+ for(let i=0;i<14;i++){let s=k=="A"?SEED_A[i]:[["Sal","Teak","Hollong","Gamari","Other"][Math.floor(r()*5)],+(30+r()*55).toFixed(1),+(10+r()*9).toFixed(1),r()<.7?"Healthy":r()<.5?"Stressed":"Diseased"];
+ T.push({tag:`AS-${k}-${String(i+1).padStart(5,"0")}`,area:k,species:s[0],girth:s[1],height:s[2],health:s[3],x:.05+rng(k.charCodeAt(0)*31+i*7)()*.9,y:.08+rng(k.charCodeAt(0)*53+i*13)()*.82})}}return T}
+let trees=build(),cur="A",hit=[];
+const $=id=>document.getElementById(id);
+const bio=t=>{const D=t.girth/Math.PI;return .0673*Math.pow(RHO[t.species]*D*D*t.height,.976)};
+const carb=t=>bio(t)*.47;
+function log(m){$("log").textContent+="\n"+m;$("log").scrollTop=1e9}
+function stats(){$("sT").textContent=trees.length;$("sF").textContent=Object.keys(AREAS).length;$("sC").textContent=(trees.reduce((a,t)=>a+carb(t),0)/1000).toFixed(1)}
+function fz(d){const r=document.documentElement;r.style.setProperty("--fs",d==0?"16px":(parseFloat(getComputedStyle(r).fontSize)+d*2)+"px")}
+/* map */
+const cv=$("cv"),cx=cv.getContext("2d");
+function bg(){const W=cv.width,H=cv.height,r=rng(cur.charCodeAt(0)*7);cx.fillStyle="#2b4a2c";cx.fillRect(0,0,W,H);
+ for(let i=0;i<260;i++){const g=r();cx.fillStyle=`rgba(${60+g*50|0},${100+g*60|0},${50+g*30|0},.45)`;cx.beginPath();cx.arc(r()*W,r()*H,8+r()*34,0,7);cx.fill()}
+ cx.strokeStyle="#3b6f94";cx.lineWidth=30;cx.beginPath();cx.moveTo(0,H*.28);cx.bezierCurveTo(W*.35,H*.1,W*.6,H*.4,W,H*.02);cx.stroke();
+ cx.strokeStyle="rgba(190,220,235,.55)";cx.lineWidth=5;cx.stroke();
+ for(let i=0;i<4;i++){cx.fillStyle="rgba(200,170,100,.35)";cx.beginPath();cx.ellipse(r()*W,r()*H,14+r()*20,40+r()*30,r()*3,0,7);cx.fill()}}
+function draw(){bg();hit=[];const L=trees.filter(t=>t.area==cur);
+ L.forEach(t=>{const x=t.x*cv.width,y=t.y*cv.height,rad=7+Math.min(t.girth,90)/9;hit.push({t,x,y,rad});
+ cx.fillStyle=COL[t.health];cx.strokeStyle="#fff";cx.lineWidth=2;cx.beginPath();cx.arc(x,y,rad,0,7);cx.fill();cx.stroke()});
+ $("cap").textContent=`${AREAS[cur]} · simulated satellite-style view · ${L.length} tagged trees`}
+function pick(e){const b=cv.getBoundingClientRect(),k=cv.width/b.width,x=(e.clientX-b.left)*k,y=(e.clientY-b.top)*k;
+ return hit.find(h=>Math.hypot(h.x-x,h.y-y)<=h.rad+3)}
+cv.addEventListener("mousemove",e=>{const h=pick(e),tp=$("tip");cv.style.cursor=h?"pointer":"default";if(!h){tp.style.display="none";return}
+ const t=h.t,b=cv.getBoundingClientRect();tp.innerHTML=`<b>${t.tag}</b> · ${t.species}<br>${t.girth} cm · ${t.height} m · ${t.health}<br>Biomass ${bio(t).toFixed(0)} kg · Carbon ${carb(t).toFixed(0)} kg`;
+ tp.style.display="block";tp.style.left=Math.min(e.clientX-b.left+14,b.width-200)+"px";tp.style.top=(e.clientY-b.top+14)+"px"});
+cv.addEventListener("mouseleave",()=>$("tip").style.display="none");
+cv.addEventListener("click",e=>{const h=pick(e);if(h){show(h.t.tag);$("lookup").scrollIntoView()}});
+/* record */
+function show(tag){const t=trees.find(x=>x.tag.toLowerCase()==tag.trim().toLowerCase());
+ if(!t){$("rec").textContent="No tree found with tag "+tag+".";return false}
+ const c=carb(t);$("tag").value=t.tag;
+ $("rec").innerHTML=`<dl><div><dt>Tag</dt><dd>${t.tag}</dd></div><div><dt>Forest area</dt><dd>${AREAS[t.area]}</dd></div><div><dt>Species</dt><dd>${t.species}</dd></div><div><dt>Girth</dt><dd>${t.girth} cm</dd></div><div><dt>Height</dt><dd>${t.height} m</dd></div><div><dt>Health</dt><dd class="${t.health}">${t.health}</dd></div><div><dt>Biomass (AGB)</dt><dd>${bio(t).toFixed(1)} kg</dd></div><div><dt>Carbon (47%)</dt><dd>${c.toFixed(1)} kg</dd></div><div><dt>CO₂ equivalent</dt><dd>${(c*44/12).toFixed(1)} kg</dd></div><div><dt>Position</dt><dd>${(26.1+t.y*.05).toFixed(5)}, ${(91.7+t.x*.05).toFixed(5)}</dd></div></dl>`;return t}
+/* registry */
+function table(){const q=$("q").value.toLowerCase(),h=$("fh").value,a=$("fa").value;
+ $("tb").innerHTML=trees.filter(t=>t.area==a&&(h=="All"||t.health==h)&&(t.tag+t.species).toLowerCase().includes(q)).map(t=>`<tr data-t="${t.tag}"><td>${t.tag}</td><td>${t.species}</td><td>${t.girth}</td><td>${t.height}</td><td>${carb(t).toFixed(0)}</td><td class="${t.health}">${t.health}</td></tr>`).join("")}
+$("tb").addEventListener("click",e=>{const r=e.target.closest("tr");if(r){show(r.dataset.t);$("lookup").scrollIntoView()}});
+["q","fh","fa"].forEach(i=>$(i).addEventListener("input",table));
+["fa","ef"].forEach(i=>$(i).innerHTML=Object.entries(AREAS).map(([k,v])=>`<option value="${k}">${v}</option>`).join(""));
+/* console */
+function run(){const v=$("cmd").value.trim();if(!v)return;log("> "+v);const l=v.toLowerCase();
+ if(l=="help")log("Commands: <forest name>, tree <tag>, list, help");
+ else if(l=="list")Object.entries(AREAS).forEach(([k,n])=>log(`${n}: ${trees.filter(t=>t.area==k).length} trees`));
+ else if(l.startsWith("tree ")){const t=show(v.slice(5));log(t?`${t.tag}: ${t.species}, carbon ${carb(t).toFixed(1)} kg`:"Tag not found.")}
+ else{const k=Object.keys(AREAS).find(k=>AREAS[k].toLowerCase()==l||("block "+k.toLowerCase())==l);
+  if(k){cur=k;$("fa").value=k;draw();table();log("Showing "+AREAS[k])}else log("Unknown forest or command. Type help.")}
+ $("cmd").value=""}
+$("run").onclick=run;$("cmd").onkeydown=e=>e.key=="Enter"&&run();
+$("showb").onclick=()=>show($("tag").value);$("tag").onkeydown=e=>e.key=="Enter"&&show($("tag").value);
+$("save").onclick=()=>{const g=+$("eg").value,h=+$("eh").value;if(!(g>0&&h>0)){log("Enter girth and height.");return}
+ let tag=$("et").value.trim(),t=tag&&trees.find(x=>x.tag==tag),k=$("ef").value;
+ if(t){Object.assign(t,{species:$("es").value,girth:g,height:h,health:$("ehl").value});log("Updated "+tag)}
+ else{const n=trees.filter(x=>x.area==k).length+1;tag=`AS-${k}-${String(n).padStart(5,"0")}`;trees.push({tag,area:k,species:$("es").value,girth:g,height:h,health:$("ehl").value,x:Math.random()*.9+.05,y:Math.random()*.8+.08});log("Created "+tag)}
+ cur=k;draw();table();stats()};
+function reset(){trees=build();cur="A";$("fa").value="A";draw();table();stats();log("Demo data reset.")}
+reset();
+</script></body></html>
